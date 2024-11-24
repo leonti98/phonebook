@@ -29,9 +29,6 @@ yarn-error.log*
 
 .runtimeconfig.json
 
-# compiled output
-/dist
-
 # Logs
 logs
 *.log
