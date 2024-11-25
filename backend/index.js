@@ -55,7 +55,6 @@ app.get("/api/persons/:id", (request, response) => {
   const id = String(request.params.id);
   const person = phonebook.find((person) => person.id === id);
   if (person) {
-    console.log("found");
     response.json(person);
   } else {
     console.log("not found");
@@ -86,21 +85,20 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  duplicate = phonebook.find((preson) => body.name === preson.name);
-
+  const duplicate = phonebook.find((person) => body.name === person.name);
   if (duplicate) {
     return response.status(400).json({ error: "name must be unique" });
   }
 
-  const note = {
+  const newPerson = {
     id: generateId(),
     name: body.name,
     number: body.number,
   };
 
-  phonebook = phonebook.concat(note);
+  phonebook = phonebook.concat(newPerson);
 
-  response.json(note);
+  response.json(newPerson);
 });
 
 const PORT = process.env.PORT || 3001;
