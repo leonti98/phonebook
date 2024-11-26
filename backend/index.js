@@ -23,11 +23,6 @@ app.use(express.static('dist'));
 app.use(express.json());
 app.use(morganLogger);
 
-const generateId = () => {
-  const id = Math.floor(Math.random() * 1000000);
-  return id;
-};
-
 app.get('/api/persons', (request, response) => {
   Phonebook.find({}).then((persons) => {
     response.json(persons);
@@ -56,8 +51,13 @@ app.get('/info', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = String(request.params.id);
-  phonebook = phonebook.filter((p) => p.id !== id);
-  response.status(204).end();
+  Phonebook.findByIdAndDelete(id)
+    .then(() => {
+      response.status(204).json({ message: 'person data deleted' }).end();
+    })
+    .catch((error) => {
+      response.status(400).json({ error: 'person not found' }).end();
+    });
 });
 
 app.post('/api/persons', async (request, response) => {
@@ -74,7 +74,6 @@ app.post('/api/persons', async (request, response) => {
     return response.status(400).json({ error: 'name must be unique' });
   } else {
     const newPerson = new Phonebook({
-      id: generateId(),
       name: body.name,
       number: body.number,
     });
