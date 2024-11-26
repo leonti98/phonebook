@@ -90,7 +90,7 @@ const App = () => {
             persons.filter((person) => person.id !== deletedPerson.id)
           );
           setNotification({
-            message: `${deletedPerson.name} has beed deleted`,
+            message: `${deletedPerson.name} has been deleted`,
             danger: false,
           });
         })
