@@ -60,7 +60,7 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end();
 });
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', async (request, response) => {
   const body = request.body;
   // check if name or number is missing
   if (!body.name || !body.number) {
@@ -69,15 +69,15 @@ app.post('/api/persons', (request, response) => {
     });
   }
   // check if name already exists
-  const duplicate = Phonebook.findOne({ name: body.name });
+  const duplicate = await Phonebook.findOne({ name: body.name });
   if (duplicate) {
     return response.status(400).json({ error: 'name must be unique' });
   } else {
-    const newPerson = {
+    const newPerson = new Phonebook({
       id: generateId(),
       name: body.name,
       number: body.number,
-    };
+    });
     newPerson.save().then((savedPerson) => {
       response.json(savedPerson);
     });
