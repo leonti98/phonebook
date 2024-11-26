@@ -36,7 +36,7 @@ app.get('/api/persons/:id', (request, response) => {
   });
 });
 
-app.get('/info', (request, response) => {
+app.get('/info', (request, response, next) => {
   Phonebook.countDocuments({})
     .then((count) => {
       const date = new Date();
@@ -49,15 +49,13 @@ app.get('/info', (request, response) => {
     });
 });
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   const id = String(request.params.id);
   Phonebook.findByIdAndDelete(id)
     .then(() => {
       response.status(204).json({ message: 'person data deleted' }).end();
     })
-    .catch((error) => {
-      response.status(400).json({ error: 'person not found' }).end();
-    });
+    .catch((error) => next(error));
 });
 
 app.post('/api/persons', async (request, response) => {
@@ -82,6 +80,24 @@ app.post('/api/persons', async (request, response) => {
     });
   }
 });
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' });
+};
+
+app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
