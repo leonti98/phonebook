@@ -50,13 +50,12 @@ app.get('/info', (request, response, next) => {
 });
 
 app.delete('/api/persons/:id', (request, response, next) => {
-  const id = String(request.params.id);
-  Phonebook.findByIdAndDelete(id)
-    .then((deletedPerson) => {
-      if (deletedPerson) {
-        response.status(204).json(deletedPerson).end();
+  Phonebook.findByIdAndDelete(request.params.id)
+    .then((result) => {
+      if (result) {
+        response.status(200).json(result);
       } else {
-        response.status(404).json({ error: 'person not found' }).end();
+        response.status(404).end();
       }
     })
     .catch((error) => next(error));
