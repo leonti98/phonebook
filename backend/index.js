@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const cors = require('cors');
+
+app.use(cors());
 
 let phonebook = [
   {
@@ -35,13 +38,9 @@ const morganLogger = morgan(
   ':method :url :status :res[content-length] - :response-time ms :content'
 );
 
-app.use(express.static('build'));
 app.use(express.json());
 app.use(morganLogger);
-
-const cors = require('cors');
-
-app.use(cors());
+app.use(express.static('build'));
 
 const generateId = () => {
   const id = Math.floor(Math.random() * 1000000);
