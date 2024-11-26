@@ -40,7 +40,7 @@ const morganLogger = morgan(
 
 app.use(express.json());
 app.use(morganLogger);
-app.use(express.static('build'));
+app.use(express.static('dist'));
 
 const generateId = () => {
   const id = Math.floor(Math.random() * 1000000);
