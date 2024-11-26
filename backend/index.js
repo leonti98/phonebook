@@ -9,19 +9,19 @@ const cors = require('cors');
 
 app.use(cors());
 
-morgan.token('content', function (req, res) {
-  console.log(req.body);
+morgan.token('content', function (request, response) {
+  console.log(request.body);
 
-  return JSON.stringify(req.body);
+  return JSON.stringify(request.body);
 });
 
 const morganLogger = morgan(
   ':method :url :status :res[content-length] - :response-time ms :content'
 );
 
+app.use(express.static('dist'));
 app.use(express.json());
 app.use(morganLogger);
-app.use(express.static('dist'));
 
 const generateId = () => {
   const id = Math.floor(Math.random() * 1000000);
