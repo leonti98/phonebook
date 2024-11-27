@@ -28,9 +28,6 @@ const App = () => {
       return false;
     } else {
       setAddingDuplcate(true);
-      console.log('==================================');
-      console.log('duplicatePerson', duplicatePerson);
-      console.log('==================================');
       return duplicatePerson;
     }
   };
@@ -47,9 +44,6 @@ const App = () => {
         phonebookService
           .updatePersonNumber(duplicate.id, newEntry)
           .then((updatedPerson) => {
-            console.log('==================================');
-            console.log('updatedPerson', updatedPerson);
-            console.log('==================================');
             if (updatedPerson) {
               setPersons(
                 persons.map((person) =>
@@ -87,10 +81,6 @@ const App = () => {
       });
     }
   };
-
-  console.log('==================================');
-  console.log('persons', persons);
-  console.log('==================================');
 
   const handleFormChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });

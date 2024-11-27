@@ -21,9 +21,6 @@ const deletePerson = (id) => {
 const updatePersonNumber = (id, newEntry) => {
   const request = axios.put(`${baseURL}/${id}`, newEntry);
   return request.then((response) => {
-    console.log('==================================');
-    console.log('response', response);
-    console.log('==================================');
     return response.data;
   });
 };
