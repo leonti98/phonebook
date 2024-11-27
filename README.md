@@ -1,3 +1,3 @@
-# Phonebook excercise. frontend and backend
+# Phonebook backend
 
-https://phonebook-b7yo.onrender.com
+This project is excercise of fullstackopen
