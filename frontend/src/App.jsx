@@ -20,15 +20,18 @@ const App = () => {
   }, []);
 
   const checkDuplicate = (newEntry) => {
-    const alreadyExists = persons.find(
+    const duplicatePerson = persons.find(
       (person) => person.name === newEntry.name
     );
-    if (alreadyExists === undefined) {
+    if (duplicatePerson === undefined) {
       setAddingDuplcate(false);
       return false;
     } else {
       setAddingDuplcate(true);
-      return alreadyExists;
+      console.log('==================================');
+      console.log('duplicatePerson', duplicatePerson);
+      console.log('==================================');
+      return duplicatePerson;
     }
   };
 
@@ -38,21 +41,33 @@ const App = () => {
       name: formData.personName,
       number: formData.number,
     };
-    const checkResult = checkDuplicate(newEntry);
-    if (checkResult) {
+    const duplicate = checkDuplicate(newEntry);
+    if (duplicate) {
       if (window.confirm(`want to update ${newEntry.name}'s number?`)) {
         phonebookService
-          .updatePersonNumber(checkResult.id, newEntry)
-          .then((returnedPerson) => {
-            setPersons(
-              persons.map((person) =>
-                person.id === returnedPerson.id ? returnedPerson : person
-              )
-            );
-            setNotification({
-              message: `${formData.personName}'s number has been updated`,
-              danger: false,
-            });
+          .updatePersonNumber(duplicate.id, newEntry)
+          .then((updatedPerson) => {
+            console.log('==================================');
+            console.log('updatedPerson', updatedPerson);
+            console.log('==================================');
+            if (updatedPerson) {
+              setPersons(
+                persons.map((person) =>
+                  person.id === updatedPerson.id
+                    ? { ...person, number: updatedPerson.number }
+                    : person
+                )
+              );
+              setNotification({
+                message: `${formData.personName}'s number has been updated`,
+                danger: false,
+              });
+            } else {
+              setNotification({
+                message: `Failed to update ${formData.personName}'s number`,
+                danger: true,
+              });
+            }
           });
         setLastEntry(`${formData.personName}'s number has been updated`);
       } else {
@@ -72,6 +87,10 @@ const App = () => {
       });
     }
   };
+
+  console.log('==================================');
+  console.log('persons', persons);
+  console.log('==================================');
 
   const handleFormChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
