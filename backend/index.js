@@ -97,7 +97,10 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number,
   };
 
-  Phonebook.findByIdAndUpdate(request.params.id, person, { new: true })
+  Phonebook.findByIdAndUpdate(request.params.id, person, {
+    new: true,
+    runValidators: true,
+  })
     .then((updatedPerson) => {
       response.json(updatedPerson);
     })
@@ -111,8 +114,6 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint);
 
 const errorHandler = (error, request, response, next) => {
-  console.log('in error handler');
-
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' });
   } else if (error.name === 'ValidationError') {
