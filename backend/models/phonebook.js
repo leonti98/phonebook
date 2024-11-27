@@ -12,7 +12,11 @@ mongoose
   .catch((error) => console.log('error connecting to MongoDB:', error.message));
 
 const phonebookSchema = new mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true,
+    minlength: 3,
+  },
   number: String,
 });
 
@@ -23,7 +27,5 @@ phonebookSchema.set('toJSON', {
     delete returnedObject.__v;
   },
 });
-
-const Phonebook = mongoose.model('Phonebook', phonebookSchema);
 
 module.exports = mongoose.model('Phonebook', phonebookSchema);

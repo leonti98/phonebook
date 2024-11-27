@@ -71,14 +71,22 @@ const App = () => {
         });
       }
     } else {
-      phonebookService.addPerson(newEntry).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setFormData({ personName: '', number: '' });
-        setNotification({
-          message: `person ${returnedPerson.name} with number ${returnedPerson.number} has been added`,
-          danger: false,
+      phonebookService
+        .addPerson(newEntry)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setFormData({ personName: '', number: '' });
+          setNotification({
+            message: `person ${returnedPerson.name} with number ${returnedPerson.number} has been added`,
+            danger: false,
+          });
+        })
+        .catch((error) => {
+          setNotification({
+            message: `${error.response.data.message}`,
+            danger: true,
+          });
         });
-      });
     }
   };
 

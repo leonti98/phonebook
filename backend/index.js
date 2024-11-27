@@ -61,7 +61,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.post('/api/persons', async (request, response) => {
+app.post('/api/persons', async (request, response, next) => {
   const body = request.body;
   // check if name or number is missing
   if (!body.name || !body.number) {
@@ -78,9 +78,14 @@ app.post('/api/persons', async (request, response) => {
       name: body.name,
       number: body.number,
     });
-    newPerson.save().then((savedPerson) => {
-      response.json(savedPerson);
-    });
+    newPerson
+      .save()
+      .then((savedPerson) => {
+        response.json(savedPerson);
+      })
+      .catch((error) => {
+        return next(error);
+      });
   }
 });
 
@@ -106,10 +111,12 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint);
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+  console.log('in error handler');
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' });
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json(error);
   }
 
   next(error);
