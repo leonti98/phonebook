@@ -13,11 +13,11 @@ This project is an exercise of the Full Stack Open course. It is a simple phoneb
 
 ## Technologies Used
 
-- Node.js
-- Express
 - MongoDB
-- Mongoose
+- Express
 - React
+- Node.js
+- Mongoose
 - Axios
 
 ## Setup Instructions
